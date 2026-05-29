@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Holiday Gala Raffle</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0c29;
+      background: linear-gradient(135deg, #1a0533 0%, #0d1b3e 50%, #0f2027 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 40px 20px;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle 3s infinite alternate;
+      opacity: 0.6;
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.2; transform: scale(1); }
+      to   { opacity: 0.9; transform: scale(1.4); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.4);
+      color: #ffd700;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffd700, #ffaa00, #fff8dc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.7);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 36px 0;
+      color: rgba(255,215,0,0.4);
+      font-size: 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,215,0,0.2);
+    }
+
+    .cards {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover { transform: translateY(-3px); }
+
+    .card.gold {
+      border-color: rgba(255,180,0,0.5);
+      background: linear-gradient(135deg, rgba(255,165,0,0.1), rgba(255,215,0,0.05));
+    }
+
+    .card.silver {
+      border-color: rgba(180,210,255,0.4);
+      background: linear-gradient(135deg, rgba(100,160,255,0.08), rgba(180,210,255,0.04));
+    }
+
+    .card-glow {
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .card.gold .card-glow { background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, transparent 70%); }
+    .card.silver .card-glow { background: radial-gradient(circle, rgba(120,180,255,0.2) 0%, transparent 70%); }
+
+    .prize-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card.gold .prize-label { color: #ffd700; }
+    .card.silver .prize-label { color: #90c8ff; }
+
+    .prize-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .card.gold .prize-amount { color: #ffd700; }
+    .card.silver .prize-amount { color: #cce4ff; }
+
+    .prize-desc {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .ticket-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 20px;
+    }
+    .ticket-price strong { color: #fff; font-size: 16px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { opacity: 0.9; transform: scale(0.99); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #f5a623, #f7c948);
+      color: #1a0a00;
+    }
+
+    .btn-silver {
+      background: linear-gradient(135deg, #4a90d9, #74b9ff);
+      color: #001a33;
+    }
+
+    .cashapp-icon {
+      width: 22px; height: 22px;
+      background: currentColor;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: inherit;
+      flex-shrink: 0;
+    }
+
+    .how-it-works {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 40px;
+    }
+
+    .how-it-works h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #ffd700;
+      margin-bottom: 20px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.4);
+      color: #ffd700;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+      padding-top: 4px;
+    }
+
+    .step p strong { color: #fff; }
+
+    .form-section {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px 28px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .form-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: #ffd700;
+      margin-bottom: 6px;
+    }
+
+    .form-section p {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .form-wrapper {
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .form-group input::placeholder { color: rgba(255,255,255,0.35); }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: rgba(255,215,0,0.5);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .form-group select option { background: #1a0f3d; color: #fff; }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      accent-color: #ffd700;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #1a0a00;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover { opacity: 0.9; transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .form-success .check { font-size: 3rem; margin-bottom: 12px; }
+    .form-success h4 { color: #ffd700; font-size: 1.2rem; margin-bottom: 8px; }
+    .form-success p { color: rgba(255,255,255,0.65); font-size: 14px; }
+
+    footer {
+      text-align: center;
+      color: rgba(255,255,255,0.35);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer span { color: rgba(255,215,0,0.6); }
+  </style>
+</head>
+<body>
+
+<!-- Twinkling stars background -->
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <header>
+    <div class="badge">✦ 3rd Annual ✦</div>
+    <h1>Family Holiday Gala<br>Raffle</h1>
+    <p class="subtitle">Win a gas card — and help us give back to the community. Every ticket purchased supports our annual community service project.</p>
+  </header>
+
+  <div class="divider">🎟️</div>
+
+  <div class="cards">
+
+    <!-- $50 Gas Card -->
+    <div class="card gold">
+      <div class="card-glow"></div>
+      <div class="prize-label">Prize 1 — Gas Card</div>
+      <div class="prize-amount">$50</div>
+      <div class="prize-desc">One winner takes home a $50 gas card</div>
+      <div class="ticket-price">🎟 Ticket price: <strong>$5 each</strong></div>
+      <a class="btn btn-gold" href="https://cash.app/$hivesfoe/5" target="_blank">
+        <span style="font-size:18px;">$</span>
+        Pay $5 via Cash App
+      </a>
+    </div>
+
+    <!-- $75 Gas Card -->
+    <div class="card silver">
+      <div class="card-glow"></div>
+      <div class="prize-label">Prize 2 — Gas Card</div>
+      <div class="prize-amount">$75</div>
+      <div class="prize-desc">One winner takes home a $75 gas card</div>
+      <div class="ticket-price">🎟 Ticket price: <strong>$10 each</strong></div>
+      <a class="btn btn-silver" href="https://cash.app/$hivesfoe/10" target="_blank">
+        <span style="font-size:18px;">$</span>
+        Pay $10 via Cash App
+      </a>
+    </div>
+
+  </div>
+
+  <div class="form-section">
+    <h3>📋 Register Your Entry</h3>
+    <p>Fill out the form below so we have your contact info — we'll reach out directly if you win!</p>
+
+    <form id="raffleForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Which Raffle(s) Are You Entering?</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="raffle" value="$50 Gas Card ($5/ticket)" />
+            🏆 $50 Gas Card — $5 per ticket
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="raffle" value="$75 Gas Card ($10/ticket)" />
+            🥇 $75 Gas Card — $10 per ticket
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">Submit My Info ✨</button>
+    </form>
+
+    <div class="form-success" id="formSuccess">
+      <div class="check">🎉</div>
+      <h4>You're registered!</h4>
+      <p>We have your info. Good luck — winners will be announced at the gala!</p>
+    </div>
+  </div>
+
+  <div class="how-it-works">
+    <h3>How It Works</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Click the button for the raffle you want to enter — or enter both!</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Complete your Cash App payment to <strong>$hivesfoe</strong>. In the <strong>note/memo field</strong>, include your <strong>name</strong> and which raffle you're entering (e.g., "Jane Smith – $50 raffle").</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Each payment = one entry. <strong>You can buy multiple tickets</strong> — just send separate payments or note the quantity.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <p>Winners will be drawn at the gala and notified directly. Good luck! 🎉</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>All proceeds support our <span>community service &amp; give-back project</span>.</p>
+    <p style="margin-top:6px;">Questions? Reach out to the event organizers.</p>
+    <p style="margin-top:16px; font-size:11px; opacity:0.5;">This raffle is operated by a private family organization for community benefit.</p>
+  </footer>
+</div>
+
+<script>
+  // ⬇️ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE after deploying
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5vXKmq48QOjQYphgWB-B_qNpjuE1gEpF4MaZGpQRKaQhPDrF2zBc8UHwdzgJuOmLOiw/exec';
+
+  document.getElementById('raffleForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const raffles = [...document.querySelectorAll('input[name="raffle"]:checked')]
+      .map(cb => cb.value).join(', ') || 'Not specified';
+
+    const data = {
+      name:   document.getElementById('name').value.trim(),
+      phone:  document.getElementById('phone').value.trim(),
+      email:  document.getElementById('email').value.trim(),
+      raffles
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      });
+      document.getElementById('raffleForm').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit My Info ✨';
+      alert('Something went wrong. Please try again.');
+    }
+  });
+
+  // Generate twinkling stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = (Math.random() * 3) + 's';
+    star.style.animationDuration = (2 + Math.random() * 3) + 's';
+    star.style.width = star.style.height = (1 + Math.random() * 3) + 'px';
+    starsEl.appendChild(star);
+  }
+</script>
+</body>
+</html>
